@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace WUDownloader
+namespace CSVtoDatabase
 {
     class Configuration
     {
-        private static string configurationFolderPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "\\WUDownloader";
+        private static string configurationFolderPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "\\CSVtoDatabase";
         private static string configurationFilePath = ConfigurationFolderPath + "\\config.txt";
         private static string tableName = "UpdateCatalog";
         
@@ -41,7 +41,7 @@ namespace WUDownloader
 
         public static void setDefaultConfiguration()
         {
-            rootPath = "C:\\WUDownloader";
+            rootPath = "C:\\CSVtoDatabase";
             downloadPath = rootPath + "\\Downloads";
             importPath = rootPath + "\\Import";
             tablePath = rootPath + "\\Table";

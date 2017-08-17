@@ -4,7 +4,7 @@ using System.Data;
 using System.Linq;
 using System.Windows.Forms;
 
-namespace WUDownloader
+namespace CSVtoDatabase
 {
     class TableBuilder
     {
@@ -35,6 +35,18 @@ namespace WUDownloader
             table = addColumnsToTable(columns);
             columnCount = columns.Count();
         }
+
+        public void buildTableSchemaFromDatabase()
+        {
+            //Create DataSet, Update Catalog DataTable, Create DataColumns, and Add DataColumns to DataTable
+
+            table = Dataset.Tables.Add(Configuration.TableName); //Get name of table
+
+            List<DataColumn> columns = new List<DataColumn>(new DataColumn[] { columnListGoesHere });
+            table = addColumnsToTable(columns);
+            columnCount = columns.Count();
+        }
+
         public void populateTableFromCsv(List<string> csv, bool hasHeaders)
         {
             int startIndex = 0;
@@ -48,16 +60,6 @@ namespace WUDownloader
                 Object[] rowContent = csv[x].Replace("\"","").Split('|'); //Separates out each element in between quotes
                 DataRow row = createDataRow(assignTypesToData(rowContent)); //creates DataRow with data types that match the table schema
                 table.Rows.Add(row);
-            }
-        }
-
-        public void populateTableFromSite(HtmlDocument siteAsHtml, string tablePath, string fileName)
-        {
-            List<DataRow> typedDataRows = getTypedDataRowsFromHTML(siteAsHtml); //stores all DataRows from HtmlDocument
-            foreach (DataRow datarow in typedDataRows) //Adds rows to table
-            {
-                AddRowToTable(datarow);
-                FileIO.ExportDataTableToCSV(table, tablePath, fileName); //Saves table to CSV
             }
         }
 
@@ -122,32 +124,7 @@ namespace WUDownloader
 
             return convertedDatas;
         }
-        private List<DataRow> getTypedDataRowsFromHTML(HtmlDocument siteAsHtml)
-        {
-            //All elements with tag of "td"
-            HtmlElementCollection cellElements = siteAsHtml.GetElementsByTagName("td");
-            List<string> unparsedRow = new List<string>();
-            foreach (HtmlElement elem in cellElements)
-            {
-                if (elem.GetAttribute("className").Contains("resultsbottomBorder") && !elem.GetAttribute("className").Contains("resultsIconWidth")) //excludes empty column
-                {
-                    string line = elem.InnerHtml;
-                    unparsedRow.Add(line); 
-                }
-            }
-            Object[] cellData = new Object[columnCount];
-            int numberOfColumnsNotParsedFromSite = 1;
-            int numOfRows = unparsedRow.Count / (columnCount - numberOfColumnsNotParsedFromSite);
-            Parser p = new Parser();
-            List<DataRow> datarows = new List<DataRow>();
-            for (int x = 0; x < numOfRows; x++)
-            {
-                cellData = Parser.parseHtmlRow(cellData.Length, unparsedRow, x);
-                DataRow datarow = createDataRow(assignTypesToData(cellData));
-                datarows.Add(datarow);
-            }
-            return datarows;
-        }
+        
         public List<object> getAllDataFromColumn(string columnName)
         {
             int columnIndex = table.Columns[columnName].Ordinal;
