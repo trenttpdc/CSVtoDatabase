@@ -24,7 +24,7 @@ namespace CSVtoDatabase
             List<string> csv = System.IO.File.ReadAllLines(filepath + ".csv").ToList();
             return csv;
         }
-        public static void ExportDataTableToCSV(DataTable table, string folderPath, string fileName)
+        public static void ExportDataTableToCSV(System.Data.DataTable table, string folderPath, string fileName)
         {
             using (StreamWriter writer = new StreamWriter(folderPath + "\\" + fileName + ".csv"))
             {
@@ -33,7 +33,7 @@ namespace CSVtoDatabase
             }
         }
 
-        private static void WriteDataTable(DataTable sourceTable, TextWriter writer, bool includeHeaders)
+        private static void WriteDataTable(System.Data.DataTable sourceTable, TextWriter writer, bool includeHeaders)
         {
             if (includeHeaders)
             {

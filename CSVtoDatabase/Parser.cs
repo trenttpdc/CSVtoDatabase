@@ -5,6 +5,13 @@ namespace CSVtoDatabase
 {
     class Parser
     {
+        public static string[] ParseHeadersFromCsvStringList(List<string> csvAsStringList)
+        {
+            //Replace "," with "|" and then remove all quotes, then split by |
+            string[] headers = csvAsStringList[0].Replace("\",\"", "\"|\"").Replace("\"", "").Split('|');
+            return headers;
+        }
+
         public static List<string> ParseLinesContaining(List<string> lines, string searchParam)
         {
             //Returns only lines containing the search parameter
@@ -20,7 +27,7 @@ namespace CSVtoDatabase
             return parsedLines;
         }
 
-        public static List<Object> parseConfigFile(List<string> lines)
+        public static List<Object> ParseConfigFile(List<string> lines)
         {
             string rootPath = "";
             string importPath = "";
